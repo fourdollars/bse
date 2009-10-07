@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "hello.h"
 
-int hello(int i)
+int hello(void)
 {
     printf("shared\n");
-    return i;
+    return 0;
 }

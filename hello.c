@@ -1,20 +1,22 @@
 #include <stdio.h>
-#include <dlfcn.h>
+#include <ltdl.h>
 #include "hello.h"
 
 int main(int argc, char* argv[])
 {
-    void* handle;
-    hello(0);
-    handle = dlopen("libshared2.so", RTLD_LAZY);
+    lt_dlhandle handle = NULL;
+    lt_dlinit();
+    hello();
+    handle = lt_dlopenext("module");
     if (handle != NULL) {
-        int (*func)(int) = dlsym(handle, "hello");
-        func(0);
+        int (*func)(void) = lt_dlsym(handle, "foo");
+        if (func != NULL) {
+            func();
+        }
+        lt_dlclose(handle);
     } else {
         printf("Can not load module.\n");
     }
-    if (handle != NULL) {
-        dlclose(handle);
-    }
+    lt_dlexit();
     return 0;
 }

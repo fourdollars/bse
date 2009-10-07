@@ -1,19 +1,24 @@
-ACLOCAL_AMFLAGS = -I m4
+SUBDIRS = libltdl
 include_HEADERS = hello.h
 bin_PROGRAMS = hello
-lib_LTLIBRARIES = libshared1.la libshared2.la
+lib_LTLIBRARIES = libshared.la module.la
 noinst_LTLIBRARIES = libstatic.la
 
+ACLOCAL_AMFLAGS = -I libltdl/m4
+
+AM_CPPFLAGS = $(LTDLINCL)
+
 hello_SOURCES = hello.c
-hello_LDADD = libshared1.la
-hello_LDFLAGS = -ldl
+hello_LDFLAGS = -export-dynamic
+hello_LDADD = libshared.la $(LIBLTDL) -dlopen self -dlopen module.la
+hello_DEPENDENCIES = $(LTDLDEPS) module.la
 
-libshared1_la_SOURCES = shared1.c
-libshared1_la_LDFLAGS = -shared
+libshared_la_SOURCES = shared.c
+libshared_la_LDFLAGS = -shared
 
-libshared2_la_SOURCES = shared2.c
-libshared2_la_LIBADD = libstatic.la
-libshared2_la_LDFLAGS = -module
+module_la_SOURCES = module.c
+module_la_LDFLAGS = -module
+module_la_LIBADD = libstatic.la
 
 libstatic_la_SOURCES = static.c
 libstatic_la_LDFLAGS = -static
