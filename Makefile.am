@@ -4,14 +4,11 @@ bin_PROGRAMS = hello
 lib_LTLIBRARIES = libshared.la module.la
 noinst_LTLIBRARIES = libstatic.la
 
-ACLOCAL_AMFLAGS = -I libltdl/m4
-
-AM_CPPFLAGS = $(LTDLINCL)
-
 hello_SOURCES = hello.c
+hello_CPPFLAGS = $(LTDLINCL)
 hello_LDFLAGS = -export-dynamic
 hello_LDADD = libshared.la $(LIBLTDL) -dlopen self -dlopen module.la
-hello_DEPENDENCIES = $(LTDLDEPS) module.la
+hello_DEPENDENCIES = $(LIBLTDL) module.la
 
 libshared_la_SOURCES = shared.c
 libshared_la_LDFLAGS = -shared
